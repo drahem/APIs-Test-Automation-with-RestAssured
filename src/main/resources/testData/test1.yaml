@@ -1,0 +1,8 @@
+testCases:
+  - testcase: JIRA-1234
+    QA-owner: Mohamed Drahem
+    description: "Create public event with mandatory fields"
+    testCaseId: test-123
+    tags:
+      - E2E
+    data:

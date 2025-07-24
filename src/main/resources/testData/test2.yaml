@@ -1,0 +1,8 @@
+testCases:
+  - testcase: JIRA-1
+    QA-owner: Mohamed Drahem
+    description: "Create location"
+    testCaseId: test-1
+    tags:
+      - E2E
+    data:
