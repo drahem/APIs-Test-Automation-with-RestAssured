@@ -2,9 +2,9 @@ name: CI/CD Pipeline - API Testing
 
 on:
   push:
-    branches: [ main, develop, feature/* ]
+    branches: [ main, develop, master, feature/* ]
   pull_request:
-    branches: [ main, develop ]
+    branches: [ main, develop, master ]
   workflow_dispatch:
     inputs:
       environment:
@@ -45,7 +45,7 @@ jobs:
       run: mvn clean test -Dtest=ConnectionTest
       
     - name: Upload Test Results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: unit-test-results
@@ -85,14 +85,14 @@ jobs:
       run: mvn allure:report
       
     - name: Upload Allure Report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: allure-report-stage
         path: target/site/allure-maven-plugin/
         retention-days: 30
         
     - name: Upload Test Results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: api-test-results-stage
@@ -133,18 +133,18 @@ jobs:
       run: mvn allure:report
       
     - name: Upload Allure Report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: allure-report-prod
         path: target/site/allure-maven-plugin/
         retention-days: 30
         
     - name: Upload Test Results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: api-test-results-prod
-        path: target/surefire-reports/
+        path: target/site/allure-maven-plugin/
         retention-days: 7
 
   # Security Scan
@@ -166,7 +166,7 @@ jobs:
       run: mvn org.owasp:dependency-check-maven:check
       
     - name: Upload Security Report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: security-report
@@ -193,7 +193,7 @@ jobs:
       run: mvn clean compile package -DskipTests
       
     - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: build-artifacts
         path: target/*.jar
