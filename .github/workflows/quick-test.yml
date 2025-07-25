@@ -2,9 +2,9 @@ name: Quick API Test
 
 on:
   push:
-    branches: [ main, develop, master ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, develop, master ]
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
