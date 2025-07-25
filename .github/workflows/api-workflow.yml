@@ -49,7 +49,7 @@ jobs:
           name: test-results
           path: |
             target/surefire-reports/
-            target/site/allure-maven-plugin/
+            target/allure-results/
           retention-days: 7
 
       - name: Upload Allure Report
@@ -57,5 +57,5 @@ jobs:
         if: always()
         with:
           name: allure-report
-          path: target/site/allure-maven-plugin/
+          path: target/allure-report/
           retention-days: 30
