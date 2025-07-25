@@ -7,6 +7,10 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  pages: write
+  id-token: write
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -42,6 +46,15 @@ jobs:
       - name: Generate Allure Report
         run: mvn allure:report
 
+      - name: Check Allure Report Directory
+        run: |
+          echo "=== Checking Allure Report Directory ==="
+          ls -la target/
+          echo "=== Allure Report Contents ==="
+          ls -la target/allure-report/ || echo "Allure report directory not found"
+          echo "=== Allure Results Contents ==="
+          ls -la target/allure-results/ || echo "Allure results directory not found"
+
       - name: Upload Test Results
         uses: actions/upload-artifact@v4
         if: always()
@@ -70,5 +83,12 @@ jobs:
           path: target/allure-report/
           
       - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
         if: always()
+        
+      - name: Show Deployment URL
+        run: |
+          echo "GitHub Pages deployment completed!"
+          echo "Check your repository Settings > Pages for the URL"
+          echo "Your Allure report should be available at: https://drahem.github.io/APIs-Test-Automation-with-RestAssured/"
