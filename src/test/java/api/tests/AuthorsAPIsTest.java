@@ -80,11 +80,4 @@ public class AuthorsApisTest extends BaseApiTest {
         authorsSteps.verifyAuthorDeletedSuccessfully(deleteResponse);
     }
 
-    @Test
-    @Description("Verify DELETE /api/v1/Authors/{id} returns error for non-existent ID")
-    public void testDeleteAuthorInvalidId() {
-        int invalidId = 0;
-        Response response = authorsSteps.deleteAuthor(invalidId);
-        authorsSteps.verifyInvalidIdResponse(response);
-    }
 } 

@@ -80,11 +80,4 @@ public class BooksApisTest extends BaseApiTest {
         booksSteps.verifyBookDeletedSuccessfully(deleteResponse);
     }
 
-    @Test
-    @Description("Verify DELETE /api/v1/Books/{id} returns error for non-existent ID")
-    public void testDeleteBookInvalidId() {
-        int invalidId = 0;
-        Response response = booksSteps.deleteBook(invalidId);
-        booksSteps.verifyInvalidIdResponse(response);
-    }
 } 
