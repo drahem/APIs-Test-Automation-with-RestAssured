@@ -41,7 +41,7 @@ jobs:
           find src/test -name "*.java" -type f
 
       - name: Run TestNG Tests
-        run: mvn clean test -DsuiteXmlFile=testng.xml
+        run: mvn clean install -DsuiteXmlFile=testng.xml
 
       - name: Generate Allure Report
         run: mvn allure:report
@@ -61,7 +61,6 @@ jobs:
         with:
           name: test-results
           path: |
-            target/surefire-reports/
             target/allure-results/
           retention-days: 7
 
