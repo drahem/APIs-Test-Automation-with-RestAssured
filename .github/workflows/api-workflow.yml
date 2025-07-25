@@ -7,10 +7,6 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
-permissions:
-  pages: write
-  id-token: write
-
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -41,19 +37,10 @@ jobs:
           find src/test -name "*.java" -type f
 
       - name: Run TestNG Tests
-        run: mvn clean install -DsuiteXmlFile=testng.xml
+        run: mvn clean test -DsuiteXmlFile=testng.xml
 
       - name: Generate Allure Report
         run: mvn allure:report
-
-      - name: Check Allure Report Directory
-        run: |
-          echo "=== Checking Allure Report Directory ==="
-          ls -la target/
-          echo "=== Allure Report Contents ==="
-          ls -la target/allure-report/ || echo "Allure report directory not found"
-          echo "=== Allure Results Contents ==="
-          ls -la target/allure-results/ || echo "Allure results directory not found"
 
       - name: Upload Test Results
         uses: actions/upload-artifact@v4
@@ -61,6 +48,7 @@ jobs:
         with:
           name: test-results
           path: |
+            target/surefire-reports/
             target/allure-results/
           retention-days: 7
 
@@ -71,23 +59,3 @@ jobs:
           name: allure-report
           path: target/allure-report/
           retention-days: 30
-          
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-        
-      - name: Upload Pages Artifact
-        uses: actions/upload-pages-artifact@v3
-        if: always()
-        with:
-          path: target/allure-report/
-          
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-        if: always()
-        
-      - name: Show Deployment URL
-        run: |
-          echo "GitHub Pages deployment completed!"
-          echo "Check your repository Settings > Pages for the URL"
-          echo "Your Allure report should be available at: https://drahem.github.io/APIs-Test-Automation-with-RestAssured/"
