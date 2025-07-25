@@ -2,8 +2,8 @@
 <suite name="Main Test Suite">
     <test name="Web Tests">
         <classes>
-            <class name="api.tests.AuthorsApisTest"/>
-            <class name="api.tests.BooksApisTest"/>
+            <class name="api.tests.AuthorsAPIsTest"/>
+            <class name="api.tests.BooksAPIsTest"/>
         </classes>
     </test>
 </suite>
