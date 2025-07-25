@@ -22,6 +22,20 @@ jobs:
         distribution: 'temurin'
         cache: maven
         
+    - name: Show Java and Maven versions
+      run: |
+        java -version
+        mvn -version
+        
+    - name: List project files
+      run: |
+        echo "=== Project Structure ==="
+        ls -la
+        echo "=== TestNG XML ==="
+        cat testng.xml
+        echo "=== Test Classes ==="
+        find src/test -name "*.java" -type f
+        
     - name: Run TestNG Tests
       run: mvn clean test -DsuiteXmlFile=testng.xml
       
@@ -36,4 +50,12 @@ jobs:
         path: |
           target/surefire-reports/
           target/site/allure-maven-plugin/
-        retention-days: 7 
+        retention-days: 7
+        
+    - name: Upload Allure Report
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: allure-report
+        path: target/site/allure-maven-plugin/
+        retention-days: 30 
