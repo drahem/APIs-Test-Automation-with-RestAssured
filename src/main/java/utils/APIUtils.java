@@ -10,7 +10,6 @@ import java.io.File;
 import java.util.Map;
 
 public class APIUtils {
-    private static RequestSpecification requestSpec = RestAssured.given();
 
 
     // ------------------- Configuration Methods -------------------
@@ -19,40 +18,11 @@ public class APIUtils {
         RestAssured.baseURI = baseUrl;
     }
 
-    @Step("Set request headers")
-    public static void setHeaders(Map<String, String> headers) {
-        requestSpec.headers(headers);
-    }
-
-    @Step("Add query parameter: {0} = {1}")
-    public static void addQueryParam(String key, String value) {
-        requestSpec.queryParam(key, value);
-    }
-
-    @Step("Add path parameter: {0} = {1}")
-    public static void addPathParam(String key, String value) {
-        requestSpec.pathParam(key, value);
-    }
-
-    @Step("Set request body")
-    public static void setRequestBody(Object body) {
-        requestSpec.body(body);
-    }
-
-    @Step("Set basic authentication: {0}/{1}")
-    public static void setBasicAuth(String username, String password) {
-        requestSpec.auth().basic(username, password);
-    }
-
-    @Step("Set bearer token authentication")
-    public static void setBearerToken(String token) {
-        requestSpec.auth().oauth2(token);
-    }
-
     // ------------------- HTTP Methods -------------------
     @Step("GET request to {0}")
     public static Response get(String endpoint) {
-        return requestSpec.get(endpoint)
+        return RestAssured.given()
+                .get(endpoint)
                 .then()
                 .log().ifError()
                 .extract().response();
@@ -60,7 +30,8 @@ public class APIUtils {
 
     @Step("POST request to {0}")
     public static Response post(String endpoint) {
-        return requestSpec.post(endpoint)
+        return RestAssured.given()
+                .post(endpoint)
                 .then()
                 .log().ifError()
                 .extract().response();
@@ -68,7 +39,8 @@ public class APIUtils {
 
     @Step("PUT request to {0}")
     public static Response put(String endpoint) {
-        return requestSpec.put(endpoint)
+        return RestAssured.given()
+                .put(endpoint)
                 .then()
                 .log().ifError()
                 .extract().response();
@@ -76,7 +48,8 @@ public class APIUtils {
 
     @Step("DELETE request to {0}")
     public static Response delete(String endpoint) {
-        return requestSpec.delete(endpoint)
+        return RestAssured.given()
+                .delete(endpoint)
                 .then()
                 .log().ifError()
                 .extract().response();
@@ -84,7 +57,116 @@ public class APIUtils {
 
     @Step("PATCH request to {0}")
     public static Response patch(String endpoint) {
-        return requestSpec.patch(endpoint)
+        return RestAssured.given()
+                .patch(endpoint)
+                .then()
+                .log().ifError()
+                .extract().response();
+    }
+
+    // ------------------- HTTP Methods with Body -------------------
+    @Step("POST request to {0} with body")
+    public static Response postWithBody(String endpoint, Object body) {
+        System.out.println("APIUtils - Request body: " + body);
+        System.out.println("APIUtils - Body type: " + (body != null ? body.getClass().getSimpleName() : "null"));
+        
+        if (body instanceof Map && ((Map<?, ?>) body).isEmpty()) {
+            // Send empty string for empty maps to trigger error response
+            return RestAssured.given()
+                    .contentType("application/json")
+                    .accept("application/json")
+                    .body("")
+                    .log().all() // Log the full request including headers and body
+                    .post(endpoint)
+                    .then()
+                    .log().ifError()
+                    .extract().response();
+        }
+        
+        return RestAssured.given()
+                .contentType("application/json")
+                .accept("application/json")
+                .body(body)
+                .log().all() // Log the full request including headers and body
+                .post(endpoint)
+                .then()
+                .log().ifError()
+                .extract().response();
+    }
+
+    @Step("PUT request to {0} with body")
+    public static Response putWithBody(String endpoint, Object body) {
+        System.out.println("APIUtils - PUT Request body: " + body);
+        
+        if (body instanceof Map && ((Map<?, ?>) body).isEmpty()) {
+            // Send empty string for empty maps to trigger error response
+            return RestAssured.given()
+                    .contentType("application/json")
+                    .accept("application/json")
+                    .body("")
+                    .log().all() // Log the full request including headers and body
+                    .put(endpoint)
+                    .then()
+                    .log().ifError()
+                    .extract().response();
+        }
+        
+        return RestAssured.given()
+                .contentType("application/json")
+                .accept("application/json")
+                .body(body)
+                .log().all() // Log the full request including headers and body
+                .put(endpoint)
+                .then()
+                .log().ifError()
+                .extract().response();
+    }
+
+    @Step("GET request to {0} with path parameter {1} = {2}")
+    public static Response getWithPathParam(String endpoint, String paramName, String paramValue) {
+        return RestAssured.given()
+                .pathParam(paramName, paramValue)
+                .get(endpoint)
+                .then()
+                .log().ifError()
+                .extract().response();
+    }
+
+    @Step("PUT request to {0} with path parameter {1} = {2} and body")
+    public static Response putWithPathParamAndBody(String endpoint, String paramName, String paramValue, Object body) {
+        System.out.println("APIUtils - PUT with path param Request body: " + body);
+        
+        if (body instanceof Map && ((Map<?, ?>) body).isEmpty()) {
+            // Send empty string for empty maps to trigger error response
+            return RestAssured.given()
+                    .contentType("application/json")
+                    .accept("application/json")
+                    .pathParam(paramName, paramValue)
+                    .body("")
+                    .log().all() // Log the full request including headers and body
+                    .put(endpoint)
+                    .then()
+                    .log().ifError()
+                    .extract().response();
+        }
+        
+        return RestAssured.given()
+                .contentType("application/json")
+                .accept("application/json")
+                .pathParam(paramName, paramValue)
+                .body(body)
+                .log().all() // Log the full request including headers and body
+                .put(endpoint)
+                .then()
+                .log().ifError()
+                .extract().response();
+    }
+
+    @Step("DELETE request to {0} with path parameter {1} = {2}")
+    public static Response deleteWithPathParam(String endpoint, String paramName, String paramValue) {
+        return RestAssured.given()
+                .pathParam(paramName, paramValue)
+                .delete(endpoint)
                 .then()
                 .log().ifError()
                 .extract().response();
@@ -121,9 +203,14 @@ public class APIUtils {
 
     // ------------------- File Upload -------------------
     @Step("Upload file: {1}")
-    public static void uploadFile(String paramName, String filePath) {
+    public static Response uploadFile(String endpoint, String paramName, String filePath) {
         File file = new File(filePath);
-        requestSpec.multiPart(paramName, file);
+        return RestAssured.given()
+                .multiPart(paramName, file)
+                .post(endpoint)
+                .then()
+                .log().ifError()
+                .extract().response();
     }
 
 }

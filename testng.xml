@@ -2,21 +2,8 @@
 <suite name="Main Test Suite">
     <test name="Web Tests">
         <classes>
-            <class name="api.tests.ApplicationContextApiTest"/>
-            <class name="api.tests.GetAlertApiTest"/>
-            <class name="api.tests.EventAPITest"/>
-            <class name="api.tests.FilterAPITest"/>
-            <class name="api.tests.HealthTest"/>
-            <class name="api.tests.LicenseAPITest"/>
-            <class name="api.tests.LocationAPITest"/>
-            <class name="api.tests.LoginApiTest"/>
-            <class name="api.tests.ObjectHistoryTest"/>
-            <class name="api.tests.RoleAPITest"/>
-            <class name="api.tests.searchAlertApiTest"/>
-            <class name="api.tests.TaskAPITest"/>
-            <class name="api.tests.TaskTypeAPITest"/>
-            <class name="api.tests.TenantAPITest"/>
-            <class name="api.tests.UserAPITest"/>
+            <class name="api.tests.AuthorsApisTest"/>
+            <class name="api.tests.BooksApisTest"/>
         </classes>
     </test>
 </suite>
